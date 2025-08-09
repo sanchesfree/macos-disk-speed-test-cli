@@ -1,5 +1,7 @@
 ## macOS Disk Speed Test CLI — Free Blackmagic Disk Speed Test alternative
 
+Languages: English — Русская версия ниже
+
 Simple open-source CLI benchmark for macOS to measure SSD/HDD/NVMe/External drive read and write speeds. Designed as a lightweight, privacy‑friendly alternative to GUI tools like Blackmagic Disk Speed Test.
 
 - Works on Intel and Apple Silicon (M‑series)
