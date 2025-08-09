@@ -2,6 +2,8 @@
 
 Languages: English — Русская версия ниже
 
+![CLI demo: volume selection and results](./screenshot.png)
+
 Simple open-source CLI benchmark for macOS to measure SSD/HDD/NVMe/External drive read and write speeds. Designed as a lightweight, privacy‑friendly alternative to GUI tools like Blackmagic Disk Speed Test.
 
 - Works on Intel and Apple Silicon (M‑series)
