@@ -4,6 +4,7 @@ Simple open-source CLI benchmark for macOS to measure SSD/HDD/NVMe/External driv
 
 - Works on Intel and Apple Silicon (M1/M2/M3)
 - Measures sequential write/read using a large temporary file
+- Interactive volume selection (defaults to internal `/tmp`; auto-fallback if no externals)
 - Auto language: English, Russian, Chinese (zh), Hindi (hi), Spanish (es) based on macOS locale (can be forced)
 - No data leaves your Mac; no installation required
 
@@ -30,6 +31,8 @@ Requires `bc` (preinstalled). By default uses `sudo purge` to drop caches for cl
 ```bash
 DISK_TEST_NO_PURGE=1 ./test-speed.sh
 ```
+
+To test an external disk, run the script and select the desired volume from the menu. If no external volumes are found, it automatically tests the internal drive.
 
 ### Example output
 ```
@@ -67,6 +70,7 @@ macOS disk speed test, macOS SSD benchmark, NVMe benchmark Mac, Blackmagic Disk 
 
 - Работает на Intel и Apple Silicon (M1/M2/M3)
 - Измеряет последовательную запись/чтение на большом временном файле
+- Интерактивный выбор тома (по умолчанию внутренний `/tmp`; авто‑фоллбек при отсутствии внешних)
 - Автоязык: en, ru, zh, hi, es по локали macOS (можно принудительно задать)
 - Ничего не отправляет в сеть; установка не требуется
 
@@ -93,6 +97,8 @@ DISK_TEST_LANG=es ./test-speed.sh
 ```bash
 DISK_TEST_NO_PURGE=1 ./test-speed.sh
 ```
+
+Чтобы протестировать внешний диск, запустите скрипт и выберите том в меню. Если внешние тома не найдены, автоматически будет протестирован внутренний накопитель.
 
 ### Пример вывода
 ```

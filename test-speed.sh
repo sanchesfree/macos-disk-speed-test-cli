@@ -3,7 +3,7 @@
 SIZE_GB=${SIZE_GB:-4}
 SIZE_MB=$((SIZE_GB * 1024))
 BLOCK_SIZE="1m"
-TESTFILE="/tmp/disk_speed_test_${SIZE_GB}gb.tmp"
+TARGET_DIR="/tmp"
 
 normalize_lang() {
   local code="$1"; code=${code//\"/}
@@ -61,6 +61,11 @@ case "$(get_lang)" in
   MSG_CORES_P="Физических ядер"
   MSG_RAM="Память"
   MSG_MACOS="macOS"
+  MSG_SELECT_DISK="Выберите том для теста (Enter — внутренний):"
+  MSG_OPTION_INTERNAL="Внутренний"
+  MSG_NO_EXTERNALS="Внешних томов не найдено. Тестирую внутренний."
+  MSG_READONLY_FALLBACK="Выбранный том только для чтения. Использую внутренний."
+  MSG_INVALID_CHOICE="Неверный выбор. Введите число 1-"
   ;;
   zh)
   TITLE="🚀 磁盘速度测试 (${SIZE_GB} GB)"
@@ -85,6 +90,11 @@ case "$(get_lang)" in
   MSG_CORES_P="物理核心"
   MSG_RAM="内存"
   MSG_MACOS="macOS"
+  MSG_SELECT_DISK="选择要测试的卷 (回车=内部)："
+  MSG_OPTION_INTERNAL="内部"
+  MSG_NO_EXTERNALS="未发现外部卷，将测试内部卷。"
+  MSG_READONLY_FALLBACK="所选卷为只读，改用内部卷。"
+  MSG_INVALID_CHOICE="无效选择。请输入 1-"
   ;;
   hi)
   TITLE="🚀 डिस्क स्पीड टेस्ट (${SIZE_GB} GB)"
@@ -109,6 +119,11 @@ case "$(get_lang)" in
   MSG_CORES_P="फिजिकल कोर"
   MSG_RAM="मेमोरी"
   MSG_MACOS="macOS"
+  MSG_SELECT_DISK="टेस्ट के लिए वॉल्यूम चुनें (एंटर=आंतरिक):"
+  MSG_OPTION_INTERNAL="आंतरिक"
+  MSG_NO_EXTERNALS="कोई बाहरी वॉल्यूम नहीं मिला, आंतरिक पर परीक्षण।"
+  MSG_READONLY_FALLBACK="चयनित वॉल्यूम केवल-पढ़ने योग्य है, आंतरिक का उपयोग।"
+  MSG_INVALID_CHOICE="अमान्य चयन। 1- दर्ज करें: "
   ;;
   es)
   TITLE="🚀 Prueba de velocidad de disco (${SIZE_GB} GB)"
@@ -133,6 +148,11 @@ case "$(get_lang)" in
   MSG_CORES_P="Núcleos físicos"
   MSG_RAM="Memoria"
   MSG_MACOS="macOS"
+  MSG_SELECT_DISK="Seleccione volumen a probar (Enter=interno):"
+  MSG_OPTION_INTERNAL="Interno"
+  MSG_NO_EXTERNALS="No se encontraron volúmenes externos. Probando el interno."
+  MSG_READONLY_FALLBACK="El volumen seleccionado es de solo lectura. Usando el interno."
+  MSG_INVALID_CHOICE="Selección inválida. Ingrese 1-"
   ;;
   *)
   TITLE="🚀 Disk speed test (${SIZE_GB} GB)"
@@ -157,6 +177,11 @@ case "$(get_lang)" in
   MSG_CORES_P="Physical cores"
   MSG_RAM="Memory"
   MSG_MACOS="macOS"
+  MSG_SELECT_DISK="Select volume to test (Enter=internal):"
+  MSG_OPTION_INTERNAL="Internal"
+  MSG_NO_EXTERNALS="No external volumes found. Testing internal."
+  MSG_READONLY_FALLBACK="Selected volume is read-only. Using internal."
+  MSG_INVALID_CHOICE="Invalid choice. Enter 1-"
   ;;
 esac
 
@@ -184,6 +209,55 @@ echo "- $MSG_CORES_P: ${CPU_PHYSICAL:-n/a}"
 echo "- $MSG_RAM: ${MEM_GB:-n/a} $UNIT_GB"
 echo "- $MSG_MACOS: ${OS_VER:-n/a} (${OS_BUILD:-n/a})"
 echo "$SEP"
+
+# Find external, mounted, writable volumes (robust for APFS/synthesized)
+get_external_mounts() {
+  for mp in /Volumes/*; do
+    [[ -d "$mp" ]] || continue
+    dev=$(df "$mp" 2>/dev/null | awk 'NR==2 {print $1}')
+    [[ -n "$dev" ]] || continue
+    info=$(diskutil info "$dev" 2>/dev/null)
+    echo "$info" | grep -Eq "Device Location:\s*External|External:\s*Yes|Internal:\s*No|Removable Media:\s*Removable|Protocol:\s*(USB|Thunderbolt|FireWire|SD)" || continue
+    printf "%s\n" "$mp"
+  done | sort -u
+}
+
+# Build selection menu if external volumes are present
+EXTERNAL_MOUNTS=()
+while IFS= read -r _mp; do
+  EXTERNAL_MOUNTS+=("$_mp")
+done < <(get_external_mounts)
+
+if (( ${#EXTERNAL_MOUNTS[@]} > 0 )); then
+  echo "$MSG_SELECT_DISK"
+  echo "1) $MSG_OPTION_INTERNAL (/tmp)"
+  idx=2
+  for mp in "${EXTERNAL_MOUNTS[@]}"; do
+    echo "$idx) $(basename "$mp") — $mp"
+    idx=$((idx+1))
+  done
+  while true; do
+    printf "> "
+    read -r choice
+    # default internal on empty or explicit 1
+    [[ -z "$choice" || "$choice" == 1 ]] && break
+    if [[ "$choice" =~ ^[0-9]+$ ]] && (( choice >= 2 && choice < idx )); then
+      TARGET_DIR="${EXTERNAL_MOUNTS[$((choice-2))]}"
+      if ! ( : > "$TARGET_DIR/.disk_speed_write_test_$$" 2>/dev/null ); then
+        echo "$MSG_READONLY_FALLBACK"
+        TARGET_DIR="/tmp"
+      else
+        rm -f "$TARGET_DIR/.disk_speed_write_test_$$"
+      fi
+      break
+    fi
+    echo "$MSG_INVALID_CHOICE$((idx-1))."
+  done
+else
+  echo "$MSG_NO_EXTERNALS"
+fi
+
+TESTFILE="$TARGET_DIR/disk_speed_test_${SIZE_GB}gb.tmp"
 
 echo "$MSG_CLEAR_CACHE"
 if [[ -z "${DISK_TEST_NO_PURGE:-}" ]]; then
