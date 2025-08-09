@@ -29,6 +29,18 @@ DISK_TEST_LANG=hi ./test-speed.sh
 DISK_TEST_LANG=es ./test-speed.sh
 ```
 
+### Supported languages
+- English (en)
+- Russian (ru)
+- Chinese (zh)
+- Hindi (hi)
+- Spanish (es)
+
+Auto‑detected from macOS locale. Force with:
+```bash
+DISK_TEST_LANG=<en|ru|zh|hi|es> ./test-speed.sh
+```
+
 Requires `bc` (preinstalled). By default uses `sudo purge` to drop caches for clean measurements. To skip cache purge (and avoid sudo prompt):
 ```bash
 DISK_TEST_NO_PURGE=1 ./test-speed.sh
@@ -93,6 +105,18 @@ DISK_TEST_LANG=ru ./test-speed.sh
 DISK_TEST_LANG=zh ./test-speed.sh
 DISK_TEST_LANG=hi ./test-speed.sh
 DISK_TEST_LANG=es ./test-speed.sh
+```
+
+### Поддерживаемые языки
+- Английский (en)
+- Русский (ru)
+- Китайский (zh)
+- Хинди (hi)
+- Испанский (es)
+
+Автоопределение по локали macOS. Принудительно:
+```bash
+DISK_TEST_LANG=<en|ru|zh|hi|es> ./test-speed.sh
 ```
 
 Требуется `bc` (предустановлен). По умолчанию используется `sudo purge` для очистки кэша перед измерениями. Чтобы пропустить очистку (и не запрашивать sudo):
