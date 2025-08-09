@@ -2,7 +2,7 @@
 
 Simple open-source CLI benchmark for macOS to measure SSD/HDD/NVMe/External drive read and write speeds. Designed as a lightweight, privacy‑friendly alternative to GUI tools like Blackmagic Disk Speed Test.
 
-- Works on Intel and Apple Silicon (M1/M2/M3)
+- Works on Intel and Apple Silicon (M‑series)
 - Measures sequential write/read using a large temporary file
 - Interactive volume selection (defaults to internal `/tmp`; auto-fallback if no externals)
 - Auto language: English, Russian, Chinese (zh), Hindi (hi), Spanish (es) based on macOS locale (can be forced)
@@ -60,7 +60,7 @@ Read speed: 3205.40 MB/s
 - Results represent sequential throughput, not random IOPS
 
 ### SEO keywords
-macOS disk speed test, macOS SSD benchmark, NVMe benchmark Mac, Blackmagic Disk Speed Test alternative, free disk speed test macOS, CLI disk benchmark, Apple Silicon SSD speed, M1 M2 M3 disk speed, external SSD USB Thunderbolt benchmark
+macOS disk speed test, macOS SSD benchmark, NVMe benchmark Mac, Blackmagic Disk Speed Test alternative, free disk speed test macOS, CLI disk benchmark, Apple Silicon M‑series SSD speed, M‑series disk speed, external SSD USB Thunderbolt benchmark
 
 ---
 
@@ -68,7 +68,7 @@ macOS disk speed test, macOS SSD benchmark, NVMe benchmark Mac, Blackmagic Disk 
 
 Простой CLI‑бенчмарк с открытым исходным кодом для macOS, который измеряет скорость последовательной записи и чтения SSD/HDD/NVMe и внешних накопителей. Лёгкая и приватная альтернатива графическим утилитам вроде Blackmagic Disk Speed Test.
 
-- Работает на Intel и Apple Silicon (M1/M2/M3)
+- Работает на Intel и Apple Silicon (M‑серии)
 - Измеряет последовательную запись/чтение на большом временном файле
 - Интерактивный выбор тома (по умолчанию внутренний `/tmp`; авто‑фоллбек при отсутствии внешних)
 - Автоязык: en, ru, zh, hi, es по локали macOS (можно принудительно задать)
@@ -126,6 +126,6 @@ DISK_TEST_NO_PURGE=1 ./test-speed.sh
 - Показатели отражают последовательную пропускную способность, а не случайные IOPS
 
 ### SEO‑ключевые слова
-тест скорости диска macOS, бенчмарк SSD macOS, NVMe бенчмарк Mac, альтернатива Blackmagic Disk Speed Test, бесплатный тест скорости диска macOS, CLI бенчмарк диска, скорость SSD Apple Silicon, скорость диска M1 M2 M3, бенчмарк внешнего SSD USB Thunderbolt
+тест скорости диска macOS, бенчмарк SSD macOS, NVMe бенчмарк Mac, альтернатива Blackmagic Disk Speed Test, бесплатный тест скорости диска macOS, CLI бенчмарк диска, скорость SSD Apple Silicon M‑серии, скорость диска M‑серии, бенчмарк внешнего SSD USB Thunderbolt
 
 
